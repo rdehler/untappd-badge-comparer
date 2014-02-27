@@ -1,36 +1,39 @@
-var express = require("express");
-var logfmt = require("logfmt");
+
+/**
+ * Module dependencies.
+ */
+
+var express = require('express');
+var routes = require('./routes');
+var user = require('./routes/user');
+var http = require('http');
+var path = require('path');
+
 var app = express();
 
-app.use(logfmt.requestLogger());
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(express.cookieParser('your secret here'));
+app.use(express.session());
+app.use(app.router);
+app.use(require('stylus').middleware(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
-var https = require("http");
-var optionsget = {
-host: 'api.untappd.com',
-port: '80',
-path: '/v4/user/info/rdehler?client_id=DE2486E62F8B6DFBF0F5089CCE0EEBD09DBEFAB5&client_secret=8804D03E2BA53910C5E02AFBC051D100943387F4',
-method: 'GET'
-};
-
-
-app.get('/', function(req, res) {
-  console.log('requested /...');
-try {
-  https.request(optionsget, function(res2) {
-    console.log('requested  the site...');
-    res2.setEncoding('utf8');
-    res2.on('data', function(chunk) {
-      console.log('sending '+chunk);
-      res.send(chunk);
-    });
-  });
-} catch(err) {
-  console.log('err caught: '+err);
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
 }
-  res.send('Hello World! (2)');
-});
 
-var port = Number(process.env.PORT || 5000);
-app.listen(port, function() {
-  console.log("Listening on " + port);
+app.get('/', routes.index);
+app.get('/users', user.list);
+
+http.createServer(app).listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
 });

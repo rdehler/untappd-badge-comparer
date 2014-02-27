@@ -1,28 +1,13 @@
 {
-  "name": "badge-comparer",
-  "version": "0.0.0",
-  "description": "Example app",
-  "main": "web.js",
+  "name": "application-name",
+  "version": "0.0.1",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rdehler/untappd-badge-comparer.git"
-  },
-  "keywords": [
-    "untappd",
-    "badge"
-  ],
-  "author": "rdehler",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rdehler/untappd-badge-comparer/issues"
-  },
-  "homepage": "https://github.com/rdehler/untappd-badge-comparer",
   "dependencies": {
-    "logfmt": "^0.21.0",
-    "express": "^3.4.8",
-    "http": "0.0.0"
+    "express": "3.4.8",
+    "ejs": "*",
+    "stylus": "*"
   }
 }
