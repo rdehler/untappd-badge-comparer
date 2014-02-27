@@ -14,12 +14,19 @@ method: 'GET'
 
 
 app.get('/', function(req, res) {
+  console.log('requested /...');
+try {
   https.request(optionsget, function(res2) {
+    console.log('requested  the site...');
     res2.setEncoding('utf8');
     res2.on('data', function(chunk) {
+      console.log('sending '+chunk);
       res.send(chunk);
     });
   });
+} catch(err) {
+  console.log('err caught: '+err);
+}
   res.send('Hello World! (2)');
 });
 
