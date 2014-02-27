@@ -3,9 +3,23 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   </head>
   <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
+    <script>
+      // html entities decode and parse into json object
+      $(document).ready(function() {
+        var preparsed = "<%= json %>";
+        var replaced = preparsed.replace(/\r\n/g, '');
+        var jsonString = $('<div/>').html("<%= json %>".replace(/\r\n/g, '')).text();
+        var response = JSON.parse(jsonString);
+        for (var item in response.response.items) {
+          $('#badges').append("<img width='90' src='"+response.response.items[item].media.badge_image_sm+"' />");
+        }
+      });
+    </script>
+    <div id="badges">
+
+    </div>
   </body>
 </html>
