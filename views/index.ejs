@@ -3,31 +3,42 @@
   <head>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <style>
+      div.column {
+        width: 50%;
+        float: left;
+      }
+    </style>
   </head>
   <body>
+    <div id="badges1" class="column">
+      <input id="firstName" class="username" type="text" />
+
+    </div>
+    <div id="badges2" class="column">
+      <input id="secondName" class="username" type="text" />
+
+    </div>
     <script>
       function newItem(item) {
         var ret = '';
         ret += "<div class='newItem'>";
-        ret += "<div class='title'>'+item.badge_name+'</div>";
+        ret += "<div class='title'>"+item.badge_name+"</div>";
         ret += "<img src='"+item.media.badge_image_sm+"' width='90' />"
         ret += "</div>";
         return ret;
       }
-      // html entities decode and parse into json object
-      var preparsed, replaced, jsonString, response;
       $(document).ready(function() {
-        preparsed = "<%= json %>";
-        replaced = preparsed.replace(/\r\n/g, '');
-        jsonString = $('<div/>').html("<%= json %>".replace(/\r\n/g, '')).text();
-        response = JSON.parse(jsonString);
-        for (var item in response.response.items) {
-          $('#badges').append(newItem(response.response.items[item]));
-        }
+        $(".username").change(function() {
+          var node = $(this);
+          $.get("/getbadges", {username: $(this).val()}, function(data) {
+            response = JSON.parse(data);
+            for (var item in response.response.items) {
+              node.parent().append(newItem(response.response.items[item]));
+            }
+          });
+        });
       });
     </script>
-    <div id="badges">
-
-    </div>
   </body>
 </html>
