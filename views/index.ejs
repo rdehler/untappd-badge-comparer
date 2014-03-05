@@ -20,6 +20,8 @@
 
     </div>
     <script>
+      var badges = {};
+      var allBadges = {};
       function newItem(item) {
         var ret = '';
         ret += "<div class='newItem'>";
@@ -32,9 +34,23 @@
         $(".username").change(function() {
           var node = $(this);
           $.get("/getbadges", {username: $(this).val()}, function(data) {
+            badges[node.val()] = [];
             response = JSON.parse(data);
             for (var item in response.response.items) {
-              node.parent().append(newItem(response.response.items[item]));
+              badges[node.val()].push(response.response.items[item]);
+              allBadges[response.response.items[item].badge_name] = response.response.items[item];
+            }
+            badges[node.val()].sort(function(a, b){
+              if (a.badge_name < b.badge_name) {
+                return -1;
+              } else if (a.badge_name > b.badge_name) {
+                return 1;
+              } else {
+                return 0;
+              }
+            });
+            for (var item in badges[node.val()]) {
+              node.parent().append(newItem(badges[node.val()][item]));
             }
           });
         });
